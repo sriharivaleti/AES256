@@ -1,0 +1,54 @@
+package com.hari.main.demo;
+
+import java.io.FileInputStream;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+
+public class XMlReaderMain {
+	
+	public static void main(String[] args) {
+		
+		String fileName = "C:\\Users\\sivaleti\\Documents\\GitHub\\J2SEPractice\\XMLReadingTest\\src\\Test.xml";
+		try {
+			XMLInputFactory xmlif = null ;
+            xmlif = XMLInputFactory.newInstance();
+            xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES,Boolean.TRUE);
+            xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES,Boolean.FALSE);
+            xmlif.setProperty(XMLInputFactory.IS_COALESCING , Boolean.FALSE);
+            
+            FileInputStream fis = null;
+            fis = new FileInputStream(fileName);
+            XMLStreamReader xmlReader = xmlif.createXMLStreamReader(fis);
+            
+            if (!validateDocumentHeader(xmlReader)) {
+				System.out.println("XMl is invalid");
+				return;
+			}
+            
+            while(xmlReader.hasNext())
+            {
+                if(xmlReader.hasText())
+                {
+                	System.out.println(xmlReader.getLocalName());
+                    System.out.println(xmlReader.getText());
+                }
+                xmlReader.next();
+            }
+			
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	 private static boolean validateDocumentHeader(XMLStreamReader xmlr){
+	        if(XMLStreamReader.START_DOCUMENT != xmlr.getEventType()){
+	            System.out.println("Error processing XML file: No document start tag found. ");
+	            return false;
+	        }
+	        return true;
+	    }
+	
+
+}
